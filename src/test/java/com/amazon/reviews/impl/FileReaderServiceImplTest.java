@@ -13,7 +13,7 @@ public class FileReaderServiceImplTest {
     private static final String INVALID_PATH = "src/test/resources/invalid_path.csv";
     private static final String EMPTY_FILE = "src/test/resources/empty.csv";
     private static final List<String> EMPTY_LIST = new ArrayList<>();
-    private static final FileReaderService reader = new FileReaderServiceImpl();
+    private final FileReaderService reader = new FileReaderServiceImpl();
 
     @Test
     public void read_Ok() {

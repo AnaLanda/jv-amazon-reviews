@@ -16,7 +16,8 @@ public class FileReaderServiceImpl implements FileReaderService {
 
     @Override
     public List<String> read(String path) {
-        try (Stream<String> stream = Files.lines(Paths.get(path))) {
+        try {
+            Stream<String> stream = Files.lines(Paths.get(path));
             return stream.collect(Collectors.toList());
         } catch (FileNotFoundException e) {
             throw new FileProcessingException("The file at the path "
