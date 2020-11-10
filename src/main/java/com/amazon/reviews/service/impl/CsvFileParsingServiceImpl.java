@@ -9,8 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CsvFileParsingServiceImpl implements FileParsingService {
     private static final int ID_INDEX = 0;
-    private static final int USER_ID_INDEX = 1;
-    private static final int PRODUCT_ID_INDEX = 2;
+    private static final int PRODUCT_ID_INDEX = 1;
+    private static final int USER_ID_INDEX = 2;
     private static final int PROFILE_NAME_INDEX = 3;
     private static final int HELPFULNESS_NUMERATOR_INDEX = 4;
     private static final int HELPFULNESS_DENOMINATOR_INDEX = 5;
@@ -36,19 +36,21 @@ public class CsvFileParsingServiceImpl implements FileParsingService {
 
     private List<String[]> parseData(List<String> input) {
         List<String[]> parsedLines = new ArrayList<>();
-        String[] parsedLine = new String[PARSED_LINE_SIZE];
         String reviewDetails;
         String reviewText;
         int commaIndex;
-        for (String line : input) {
+        for (int i = 1; i < input.size(); i++) {
+            String[] parsedLine = new String[PARSED_LINE_SIZE];
+            String line = input.get(i);
             commaIndex = StringUtils.ordinalIndexOf(line, ",", LAST_CSV_COMMA);
             reviewDetails = line.substring(0, commaIndex);
-            reviewText = line.substring(commaIndex);
+            reviewText = line.substring(commaIndex + 1);
             String[] dataItems = reviewDetails.split(",");
-            for (int i = 0; i < PARSED_LINE_SIZE - 1; i++) {
-                parsedLine[i] = dataItems[i];
+            for (int j = 0; j < PARSED_LINE_SIZE - 1; j++) {
+                parsedLine[j] = dataItems[j];
             }
             parsedLine[TEXT_INDEX] = reviewText;
+            parsedLines.add(parsedLine);
         }
         return parsedLines;
     }
