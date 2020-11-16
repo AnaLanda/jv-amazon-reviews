@@ -2,19 +2,18 @@ package com.amazon.reviews.service.impl;
 
 import com.amazon.reviews.exception.FileProcessingException;
 import com.amazon.reviews.model.dto.ReviewDto;
-import com.amazon.reviews.service.FileReaderService;
+import com.amazon.reviews.service.ParsingService;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class CsvParsingServiceImplTest {
-    private final CsvToReviewDtoParsingServiceImpl service = new CsvToReviewDtoParsingServiceImpl();
-    private final FileReaderService reader = new FileReaderServiceImpl();
-    private final String line = "1, B001E4KFG0, A3SGXH7AUHU8GW, delmartian, 1, 1, 5, 1303862400, "
-            + "Good Quality Dog Food, I have bought several of the Vitality "
+    private static final String LINE = "1, B001E4KFG0, A3SGXH7AUHU8GW, delmartian, 1, 1, 5, "
+            + "1303862400, Good Quality Dog Food, I have bought several of the Vitality "
             + "canned dog food products, and I have found them all to be of good quality. "
             + "The product looks more like a stew than a processed meat and it smells better. "
             + "My Labrador is finicky, and she appreciates this product better than most.";
-    private final String badLine = "1, B001E4KFG0";
+    private static final String BAD_LINE = "1, B001E4KFG0";
+    private final ParsingService<ReviewDto> service = new CsvToReviewDtoParsingServiceImpl();
 
     @Test
     public void parse_Ok() {
@@ -29,11 +28,11 @@ public class CsvParsingServiceImplTest {
         reviewDto.setTime("1303862400");
         reviewDto.setSummary("Good Quality Dog Food");
         reviewDto.setText("I have bought several of the Vitality canned dog food products, "
-                + "and I have found them all to be of good quality. The product looks more like a stew "
-                + "than a processed meat and it smells better. My Labrador is finicky, "
+                + "and I have found them all to be of good quality. The product looks more like "
+                + "a stew than a processed meat and it smells better. My Labrador is finicky, "
                 + "and she appreciates this product better than most.");
 
-        ReviewDto actualResult = service.parse(line);
+        ReviewDto actualResult = service.parse(LINE);
         ReviewDto expectedResult = reviewDto;
         Assert.assertEquals(expectedResult, actualResult);
     }
@@ -41,7 +40,7 @@ public class CsvParsingServiceImplTest {
     @Test
     public void parseWrongFormat() {
         Assert.assertThrows(FileProcessingException.class, () -> {
-            service.parse(badLine);
+            service.parse(BAD_LINE);
         });
     }
 }
